@@ -73,8 +73,8 @@ doge.commands = ['doge','dogecoin','dc']
 def usd2doge(phenny, input):
 	num = input.group(2)
 	doger = doge2()
-	btc = btc()
-	result = float(btc) * float(doge)
+	btc3 = btc()
+	result = float(btc3) * float(doger)
 	if result != 0:
 		do = float(num) / float(result)
 		phenny.say('$%s will get you Ɖ%s' % (num, do))
@@ -85,11 +85,11 @@ usd2doge.commands = ['usd2doge']
 def doge2usd(phenny, input):
 	num = input.group(2)
 	doger = doge2()
-	btc = btc()
-	result = float(btc) * float(doge)
+	btc3 = btc()
+	result = float(btc3) * float(doger)
 	if result != 0:
 		do = float(num) * float(result)
 		phenny.say('Ɖ%s will get you $%s' % (num, do))
 	else:
 		phenny.say('doge is worthless')
-usd2doge.commands = ['doge2usd']
+doge2usd.commands = ['doge2usd']
