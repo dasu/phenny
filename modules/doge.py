@@ -58,7 +58,7 @@ def doge(phenny, input):
 		go = 1
 
 	if go is not 1:
-		result = float(bitcoin_price) * float(dogerate)
+		result = float((bitcoin_price.replace(",", ""))) * float((dogerate.replace(",","")))
 		dollar_result = 1 / float(result)
 		diff = result - lastPrice
 		diffStr = ""
