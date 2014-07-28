@@ -3,23 +3,19 @@
 
 import json
 from socket import socket as ss
-#sock = ss()
 def login(sock):
-        #global sock
         sock.connect(("api.vndb.org", 19534))
         test = bytes("login {\"protocol\":1,\"client\":\"syrup\",\"clientver\":0.1}\x04", "utf-8")
         sock.sendall(test)
         recv(sock)
 
 def recv(sock):
-        #global sock
         data = sock.recv(1024)
         if not str(data, "utf-8").endswith("\x04"):
                 data += recv(sock)
         return data
 
 def vndb(phenny, input):
-        #global sock
         length = {}
         length[1] = "Very short (< 2 hours)"
         length[2] = "Short (2 - 10 hours)"
