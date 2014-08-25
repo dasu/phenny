@@ -1,5 +1,6 @@
 #ported from feety's willie irc bot module.
 import re
+
 import redis
 
 db = redis.Redis(db=0)
@@ -46,12 +47,18 @@ def parse_line(ln, split_lines=False, pair_len=3, min_sentence_len=6):
 #@willie.module.rule(r'.*4')
 def wafflebot(phenny, input):
    pairs = parse_line(input.group(0))
+
+
+
+
    for key, vals in pairs.items():
       db.sadd(key, *vals)
 wafflebot.rule = (r'.*$')
 wafflebot.priority = 'medium'
 
 def wafflebottalk(phenny, input):
+
+
 	sentence = seed = db.randomkey()
 	max_length = 6 #Number of iterations. 1 = 3 words
 	
@@ -59,14 +66,32 @@ def wafflebottalk(phenny, input):
 		if i>= max_length:
 			break
 
+
 		seed = db.srandmember(seed)
 		if not seed:
+
+
+
+
+
+
+
+
+
+
 			break
-		
-		sentence = " ".join([sentence.decode("utf-8"), seed.decode("utf-8")])
+		print(sentence)
+		print(seed)	
+		if type(sentence) is bytes:
+			sentence = sentence.decode("utf-8")
+		if type(seed) is bytes:
+			seed = seed.decode("utf-8")
+
+		sentence = " ".join([sentence, seed])
 	phenny.say(sentence)
 wafflebottalk.commands = ['wb', 'talk']
 wafflebottalk.priority = 'low'
+
 
 def wafflebotknows(phenny,input):
 	knows = db.dbsize()
