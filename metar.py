@@ -143,7 +143,7 @@ class Weather(object):
         if self.cover:
             chunks.append(self.cover)
 
-        chunks.append('{0}°C'.format(self.temperature))
+        chunks.append('{0}°C ({1}°F)'.format(self.temperature, (((self.temperature*9)/5))+32))
 
         if self.pressure:
             chunks.append('{0} hPa'.format(self.pressure))
