@@ -1,20 +1,18 @@
 #todo: fix some unicode decode issue on certain japanese searches.
-
-
 import json
 from socket import socket as ss
 
 def login(sock):
         sock.connect(("api.vndb.org", 19534))
-        test = bytes("login {\"protocol\":1,\"client\":\"syrup\",\"clientver\":0.7}\x04", "utf-8")
+        test = bytes("login {\"protocol\":1,\"client\":\"syrup\",\"clientver\":0.8}\x04", "utf-8")
         sock.sendall(test)
         recv(sock)
 
 def recv(sock):
         data = sock.recv(4096)
         if not str(data, "utf-8").endswith("\x04"):
-                fulldata += recv(sock)
-        return fulldata
+                data += recv(sock)
+        return data
 
 def gettags(tags):
         json_data=open("/home/desu/vndb/tags.json").read()
@@ -45,6 +43,7 @@ def vndb(phenny, input):
         test = bytes(request, "utf-8")
         login(sock)
         sock.sendall(test)
+        #phenny.say(sock)
         vn = recv(sock)
         #phenny.say(vn)
         if str(vn, "utf-8")[0:5] == 'error':
@@ -54,9 +53,20 @@ def vndb(phenny, input):
                 if js['items']:
                         tags = js['items'][0]['tags']
                         tags2 = gettags(tags)
-                        phenny.say('{0}: http://vndb.org/v{1}, Released: {2}, Length: {3}, Tags: {4}'.format(js['items'][0]['title'],js['items'][0]['id'],js['items'][0]['released'],length[js['items'][0]['length']],tags2))
+                        if not tags2:
+                                tags2 = "None"
+                        if not js['items'][0]['length']:
+                                vnlength = 'Unknown'
+                        else:
+                                vnlength = length[js['items'][0]['length']]
+                        if not js['items'][0]['released']:
+                                released = 'Unknown'
+                        else:
+                                released = js['items'][0]['released']
+                        phenny.say('{0}: http://vndb.org/v{1} , Released: {2}, Length: {3}, Tags: {4}'.format(js['items'][0]['title'],js['items'][0]['id'],released,vnlength,tags2))
                 else:
                         phenny.say("No results.")
         sock.close()
 vndb.commands = ['vndb','vn']
 vndb.priority = 'medium'
+
