@@ -7,6 +7,7 @@ import time
 def parse(now):
         new = []
         allnew = ''
+        url = 'http://www.animenewsnetwork.com/news/rss.xml'
         x = feedparser.parse(url)
         for items in x.entries:
                 if now < items.published_parsed:
@@ -19,14 +20,13 @@ def parse(now):
                 return allnew
 
 def rss(phenny, input):
-        url = 'http://www.animenewsnetwork.com/news/rss.xml'
-        x = feedparser.parse(url)
+        now = time.gmtime()
+        time.sleep(3600)
         while True:
-                time.sleep(7200) #every two hours
-                now = time.gmtime()
+                time.sleep(7200)
                 out = parse(now)
                 if out:
                         phenny.say(out)
-
+                now = time.gmtime()
 rss.commands = ['startrss']
 rss.priority = 'medium'
