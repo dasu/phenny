@@ -4,23 +4,23 @@ from datetime import datetime
 import json
 
 def date_handler(obj):
-	return obj.isoformat() if hasattr(obj, 'isoformat') else obj
+        return obj.isoformat() if hasattr(obj, 'isoformat') else obj
 def date_hook(json_dict):
-	for(key, value) in json_dict.items():
-		try: 
-			json_dict[key] = datetime.strptime(value, "%Y-%m-%dT%H:%M:%S")
-		except:
-			pass
-	return json_dict
+        for(key, value) in json_dict.items():
+                try:
+                        json_dict[key] = datetime.strptime(value, "%Y-%m-%dT%H:%M:%S")
+                except:
+                        pass
+        return json_dict
 
 def writejson(dict):
-	with open('/home/desu/phenny-master/modules/data.txt', 'w') as bdayfile:
-		json.dump(dict, bdayfile, default=date_handler)
+        with open('/home/desu/phenny-master/modules/data.txt', 'w') as bdayfile:
+                json.dump(dict, bdayfile, default=date_handler)
 
 def readjson():
-	with open('/home/desu/phenny-master/modules/data.txt','r') as bdayfile:
-		dict = json.loads(bdayfile.read(), object_hook=date_hook)
-	return dict
+        with open('/home/desu/phenny-master/modules/data.txt','r') as bdayfile:
+                dict = json.loads(bdayfile.read(), object_hook=date_hook)
+        return dict
 
 def datetonext(dict):
         res = []
@@ -34,27 +34,41 @@ def datetonext(dict):
         return res
 
 def setbday(phenny, input):
-	dict = readjson()
-	name = input.nick
-	#phenny.say(input.group(1))
-	try:
-		date = datetime.strptime(input.group(1), '%m-%d')
-	except:
-		phenny.say("Please enter a valid date.  Accepts MONTH-DAY only.")
-		return
-	dict[name] = date
-	#phenny.say(name+str(date))
-	writejson(dict)	
-	phenny.say("Birthday saved.")
+        dict = readjson()
+        name = input.nick
+        #phenny.say(input.group(1))
+        try:
+                date = datetime.strptime(input.group(1), '%m-%d')
+        except:
+                phenny.say("Please enter a valid date.  Accepts MONTH-DAY only.")
+                return
+        dict[name] = date
+        #phenny.say(name+str(date))
+        writejson(dict)
+        phenny.say("Birthday saved.")
 setbday.priority = 'low'
-setbday.rule = r'^.setbday (\d{1,2}-\d{1,2})$'
+#setbday.rule = r'^.setbday (\d{1,2}-\d{1,2})$'
 
 def nextbday(phenny, input):
-	dict = readjson()
-	res = datetonext(dict)
-	nname=res[0][0]
-	nbday=(dict[nname]).strftime('%B %d')
-	daysaway=(res[0][1]).days
-	phenny.say("Next birthday: %s on %s (%s days away)" %(nname, nbday, daysaway))
+        dict = readjson()
+        res = datetonext(dict)
+        if input.group(2):
+                try:
+                        phenny.say("%s's birthday is on %s"%(input.group(2), dict[input.group(2)].strftime("%B %d")))
+                except:
+                        phenny.say("Name not found...Check case sensitivity.")
+        else:
+                btoday = 0
+                for c in dict.items():
+                        if c[1].date() == datetime.today().replace(year=1900).date():
+                                btoday = "Today is %s birthday!"%(c[0])
+
+                nname=res[0][0]
+                nbday=(dict[nname]).strftime('%B %d')
+                daysaway=(res[0][1]).days + 1
+                if btoday:
+                        phenny.say("%s - Next birthday: %s on %s (%s days away)" %(btoday, nname, nbday, daysaway))
+                else:
+                        phenny.say("Next birthday: %s on %s (%s days away)" %(nname, nbday, daysaway))
 nextbday.commands = ['bday','birthday']
-nextbday.priority = 'low'	
+nextbday.priority = 'low'
