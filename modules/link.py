@@ -4,6 +4,7 @@
 
 from bs4 import BeautifulSoup
 from urllib.request import urlopen
+import html5lib
 
 def idunno(phenny, input):
 	d = 0
@@ -16,7 +17,7 @@ def idunno(phenny, input):
 			print("url doesn't exist?")
 		if d:
 			try:
-				bs = BeautifulSoup(d)
+				bs = BeautifulSoup(d,'html5lib')
 			except:
 				print("url didn't have a title?")
 			
