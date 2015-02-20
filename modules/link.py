@@ -17,7 +17,7 @@ def idunno(phenny, input):
 			print("url doesn't exist?")
 		if d:
 			try:
-				bs = BeautifulSoup(d,'html5lib')
+				bs = BeautifulSoup(d,'html5lib',from_encoding="utf-8")
 			except:
 				print("url didn't have a title?")
 			
